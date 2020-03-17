@@ -66,39 +66,22 @@ def scrape ():
     mars_tweets_html = browser.html
     mars_tweets_soup = BeautifulSoup(mars_tweets_html, 'html.parser')
 
-    tweets = mars_weather_soup.find('ol', class_='stream-items')
-    mars_weather = tweets.find('p', class_="tweet-text").text
-    mars_data["weather_summary"] = mars_weather
+    mars_weather_tweet = mars_tweets_soup.find_all('article')
+    for x in mars_weather_tweet:
+    tweet = x.find("div",attrs={"data-testid":"tweet"})
+    tweet_list=tweet.find("div",class_="css-901oao r-hkyrab r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-bnwqim r-qvutc0")
+    for j in tweet_list:
+        print(j.parent.text)
 
-    # Scrape Mars facts from Space Facts
-    mars_facts_url = 'https://space-facts.com/mars/'
-    browser.visit(mars_facts_url)
-    time.sleep(5)
-    mars_facts_html = browser.html
-    mars_facts_soup = BeautifulSoup(mars_facts_html, 'html.parser')
 
-    fact_table = mars_facts_soup.find('table', class_='tablepress tablepress-id-mars')
-    column1 = fact_table.find_all('td', class_='column-1')
-    column2 = fact_table.find_all('td', class_='column-2')
+  # Scrape Mars facts table
+  mars_facts_url = 'https://space-facts.com/mars/'
+  browser.visit(mars_facts_url)
+  time.sleep(5)
+  mars_facts_html = browser.html
+  mars_facts_soup = BeautifulSoup(mars_facts_html, 'html.parser')
 
-    facets = []
-    values = []
-
-    for row in column1:
-        facet = row.text.strip()
-        facets.append(facet)
-        
-    for row in column2:
-        value = row.text.strip()
-        values.append(value)
-        
-    mars_facts = pd.DataFrame({
-        "Facet":facets,
-        "Value":values
-        })
-
-    mars_facts_html = mars_facts.to_html(header=False, index=False)
-    mars_data["fact_table"] = mars_facts_html
+  mars_facts_soup.body.find_all('table', class_="tablepress tablepress-id-p-mars")
 
     # scrape images of Mars' hemispheres from the USGS site
     mars_hemisphere_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
