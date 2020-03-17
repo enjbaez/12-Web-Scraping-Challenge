@@ -81,7 +81,7 @@ def scrape ():
   mars_facts_html = browser.html
   mars_facts_soup = BeautifulSoup(mars_facts_html, 'html.parser')
 
-  mars_facts_soup.body.find_all('table', class_="tablepress tablepress-id-p-mars")
+  mars_facts_soup.body.find('table', class_="tablepress tablepress-id-p-mars").text
 
     # scrape images of Mars' hemispheres from the USGS site
     mars_hemisphere_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
